@@ -1,0 +1,966 @@
+.title-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 14px;
+    margin-bottom: 25px;
+}
+
+.btn-create {
+    background: #4379EE;
+    color: white;
+    border: none;
+    padding: 10px 22px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: background 0.3s ease;
+}
+
+.btn-create i {
+    font-size: 14px;
+}
+
+.btn-create:hover {
+    background: #1956da;
+}
+
+.search-container {
+    margin: 20px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.search-bar {
+    display: flex;
+    align-items: center;
+    background: white;
+    padding: 12px 20px;
+    border-radius: 8px;
+    width: 480px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.search-bar i {
+    font-size: 16px;
+    color: black;
+    margin-right: 15px;
+}
+
+.search-bar input {
+    border: none;
+    outline: none;
+    width: 100%;
+    font-size: 12px;
+}
+
+.search-bar input::placeholder {
+    color: #9A9AA9;
+    font-size: 12px;
+}
+
+.filter-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.showall-pill{
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+
+    padding: 12px 12px;
+    border-radius: 8px;
+    border: 1px solid #e5e7eb;
+    background: #fff;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+
+    cursor: pointer;
+    user-select: none;
+    transition: all .2s ease;
+}
+
+/* keep checkbox normal size */
+.showall-pill input[type="checkbox"]{
+    width: 14px;
+    height: 14px;
+    margin: 0;
+}
+
+/* checked pill style (this is the key) */
+.showall-pill:has(input:checked){
+    border-color: #4379EE;
+    background: rgba(67,121,238,0.12);
+}
+
+/* optional: text style */
+.showall-pill span{
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.filter-bar {
+    display: flex;
+    align-items: center;
+    background: white;
+    padding: 12px 10px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.filter-bar select {
+    border: none;
+    outline: none;
+    min-width: 110px;
+    font-size: 12px;
+    background: transparent;
+}
+
+.table-container {
+    margin: 20px 0;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    padding: 20px 10px;
+}
+
+.table-container table {
+    width: 100%;
+    border-collapse: collapse;
+}
+.table-container th, .table-container td {
+    padding: 8px 0px;
+    text-align: center;
+    font-size: 14px;
+}
+
+.table-container td {
+    font-size: 13px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.table-container tbody tr {
+    border-bottom: 1px solid #e4e4e4;
+}
+
+tr.row-inactive {
+    color: #6b7280;
+    background: #efefef;
+    opacity: 0.8;
+}
+
+
+td.email-cell {
+    max-width: 200px;
+}
+
+td.username-cell {
+    max-width: 120px;
+}
+
+.table-container img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+td.statusActive {
+    color: #15DA54;
+    font-weight: 600;
+}
+
+td.statusInactive {
+    color: #E71D36;
+    font-weight: 600;
+    opacity: 1;
+}
+
+
+.action-icon {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+.edit-icon, .disable-icon, .view-icon, .enable-icon {
+    font-size: 14px;
+    cursor: pointer;
+    border-radius: 50%;
+    padding: 10px;
+    transition: background-color 0.3s ease;
+    margin: 5px 0;
+}
+
+.edit-icon {
+    background-color: #605BFF1b;
+    color: #605BFF;
+}
+
+.disable-icon {
+    background-color: #E71D361b;
+    color: #E71D36;
+    padding: 10px;
+}
+
+.view-icon {
+    background-color: #9CA3AF1b;
+    color: #9CA3AF;
+}
+
+.enable-icon {
+    background-color: #15DA541b;
+    color: #15DA54;
+}
+
+.edit-icon:hover {
+    background-color: #615bff3a;
+}
+
+.disable-icon:hover {
+    background-color: #E71D363a;
+}
+
+.view-icon:hover {
+    background-color: #9CA3AF3a;
+}
+
+.enable-icon:hover {
+    background-color: #15DA543a;
+}
+
+
+/* Modal Styles */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(3px); /* blur background */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+    z-index: 1000;
+}
+
+.modal {
+    background: white;
+    padding: 24px 25px;
+    border-radius: 12px;
+    width: 450px;
+    max-width: 90%;
+    max-height: 90vh;        
+    overflow-y: auto;  
+
+    transform: scale(0.9);
+    transition: transform 0.3s ease;
+    scrollbar-gutter: stable both-edges;
+}
+
+/* Some scrollbar styles */
+.modal::-webkit-scrollbar {
+    width: 10px;
+}
+
+.modal::-webkit-scrollbar-track {
+    background: transparent;
+    margin: 8px 0;
+}
+
+.modal::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.25);
+    border-radius: 10px;
+    border: 3px solid white;
+}
+
+.modal::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.4);
+}
+
+.modal-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.modal-overlay.active .modal {
+    transform: scale(1);
+}
+
+.popup-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.form-error {
+    display: none;
+    background: #fee2e2;
+    color: #991b1b;
+    font-size: 13px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    margin: 12px 0;
+}
+
+.closeModal-btn {
+    background: #0000000D;
+    color: black;
+    border: none;
+    padding: 12px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 20px;
+    transition: background 0.2s ease;
+}
+
+.closeModal-btn:hover {
+    background: #0000001A;
+}
+
+.modal label {
+    display: block;
+    font-size: 15px;
+    margin-bottom: 5px;
+}
+
+.modal .requiredStar {
+    color: #E71D36;
+    margin-left: 2px;
+}
+
+.profile-holder {
+    align-items: center;
+    margin: 14px 0;
+}
+
+/* Upload button */
+.upload-btn {
+    display: block;
+    margin: 26px auto;
+    padding: 14px 24px;
+    border-radius: 8px;
+    border: none;
+    background: #4379EE;
+    color: white;
+    font-size: 12px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.upload-btn:hover {
+    background: #1956da;
+}
+
+.img-holder {
+    width: 220px;
+    height: 220px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.05);
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.img-holder i {
+    font-size: 64px;
+    color: #444;
+}
+
+.img-holder img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.profile-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.upload-btn.danger {
+    background:#f33248;
+}
+
+.modal input, .modal select {
+    width: 100%;
+    padding: 12px 14px;
+    margin-bottom: 14px;
+    border-radius: 8px;
+    border: 1px solid #ced0d4;
+    font-size: 14px;
+    outline: none;
+}
+
+.modal input:focus, .modal select:focus {
+    border-color: #2563eb;
+}
+
+.create-btn {
+    padding: 12px 25px;
+    border-radius: 8px;
+    border: none;
+    background: #15DA54;
+    color: white;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    display: block;
+    margin: 5px auto;
+    transition: background 0.2s ease;
+}
+
+.create-btn:hover {
+    background: #04bf3f;
+}
+
+.create-btn.view-close {
+    background: rgb(175, 175, 175);
+}
+
+.create-btn.view-close:hover {
+    background: rgb(120, 120, 120);
+}
+
+.create-btn.updateBtn {
+    background: #4379EE;
+}
+
+.create-btn.updateBtn:hover {
+    background: #1956da;
+}
+
+
+
+/* View modal specific */
+.view-admin-modal {
+    max-width: 760px;
+}
+
+/* Header card */
+.view-header-card {
+    margin-top: 14px;
+    padding: 16px;
+    border: 1px solid #eee;
+    border-radius: 14px;
+    display: flex;
+    gap: 16px;
+    align-items: center;
+}
+
+.view-avatar {
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 1px solid #eee;
+    display: grid;
+    place-items: center;
+    flex: 0 0 auto;
+}
+
+.view-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.view-header-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.view-title-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.view-username {
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 1.2;
+    word-break: break-word;
+}
+
+.view-badges {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+.view-badge {
+    font-size: 12px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    border: 1px solid #e6e6e6;
+    background: #fafafa;
+    white-space: nowrap;
+}
+
+.view-badge.status.active {
+    border-color: #bfe9c8;
+    background: #f1fff5;
+}
+
+.view-badge.status.inactive {
+    border-color: #ffcccc;
+    background: #fff3f3;
+}
+
+.view-sub-row {
+    margin-top: 8px;
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.view-meta {
+    font-size: 13px;
+    color: #666;
+}
+
+.view-meta-label {
+    color: #888;
+    margin-right: 6px;
+}
+
+.view-link {
+    font-size: 13px;
+    text-decoration: underline;
+    color: inherit;
+    opacity: 0.85;
+}
+
+/* Section + grid */
+.view-section {
+    margin-top: 14px;
+}
+
+.view-section-title {
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.view-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+@media (max-width: 560px) {
+    .view-grid { grid-template-columns: 1fr; }
+}
+
+.view-item {
+    border: 1px solid #eee;
+    border-radius: 12px;
+    padding: 12px;
+    background: #fff;
+}
+
+.view-item-wide {
+  grid-column: 1 / -1; /* spans both columns */
+}
+
+.view-value-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.copy-btn {
+  border: 1px solid #eee;
+  background: #fafafa;
+  border-radius: 10px;
+  padding: 8px 10px;
+  cursor: pointer;
+}
+
+.copy-btn:hover {
+  background: #f2f2f2;
+}
+
+.view-label {
+    font-size: 13px;
+    color: #777;
+    margin-bottom: 6px;
+}
+
+.view-value {
+    font-size: 15px;
+    word-break: break-word;
+}
+
+/* Footer spacing */
+.view-footer {
+    margin-top: 16px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.date-line {
+    font-weight: 600;
+}
+
+.time-line {
+    font-size: 14px;
+    color: #666;
+    margin-top: 2px;
+    text-transform: lowercase;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Confirm modal overlay */
+.confirm-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5); /* darker */
+    backdrop-filter: blur(2px);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+    z-index: 2000;
+}
+
+.confirm-modal {
+    background: white;
+    width: 360px;
+    max-width: 90%;
+    padding: 22px;
+    border-radius: 12px;
+    text-align: center;
+
+    transform: scale(0.9);
+    transition: transform 0.2s ease;
+}
+
+.confirm-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.confirm-overlay.active .confirm-modal {
+    transform: scale(1);
+}
+
+.confirm-modal h3 {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.confirm-modal p {
+    font-size: 15px;
+    color: #555;
+    margin-bottom: 20px;
+}
+
+.confirm-actions {
+    display: flex;
+    justify-content: center;
+    gap: 25px;
+}
+
+.cancel-btn {
+    padding: 8px 14px;
+    border-radius: 6px;
+    border: none;
+    background: #e5e7eb;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.cancel-btn:hover {
+    background: #d1d5db;
+}
+
+.confirm-btn {
+    padding: 8px 16px;
+    border-radius: 6px;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+/* Create Confirm Btn */
+.confirm-btn.createConfirm {
+    background: #15DA54;
+    color: white;
+}
+.confirm-btn.createConfirm:hover {
+    background: #04bf3f;
+}
+
+/* Update Confirm Btn */
+.confirm-btn.updateConfirm {
+    background: #4379EE;
+    color: white;
+}
+.confirm-btn.updateConfirm:hover {
+    background: #1956da;
+}
+
+/* Danger (Delete) */
+.confirm-btn.disableConfirm {
+    background: #E71D36;
+    color: white;
+}
+.confirm-btn.disableConfirm:hover {
+    background: #c4162b;
+}
+
+.confirm-btn.enableConfirm {
+    background: #15DA54;
+    color: white;
+}
+
+.confirm-btn.enableConfirm:hover {
+    background: #04bf3f;
+}
+
+
+
+/* Toast Styles */
+.toast {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    /* min-width: 260px; */
+    padding: 14px 18px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    color: white;
+    opacity: 0;
+    transform: translateX(10px);
+    pointer-events: none;
+    transition: all 0.4s ease;
+    z-index: 3000;
+}
+
+/* States */
+.toast.success {
+    background: #1fca5e;
+}
+
+.toast.error {
+    background: #dc2626;
+}
+
+.toast.warning {
+    background: #f59e0b;  /* amber */
+}
+
+.toast.show {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+
+
+
+
+/* ============================
+   DARK MODE PATCH (Admin Page) - FINAL
+   Put this at the VERY BOTTOM of admin.css
+============================ */
+
+/* ---------- Search + Filter (force override white) ---------- */
+.search-bar,
+.filter-bar,
+.showall-pill,
+.table-container {
+    background: var(--panel) !important;
+    border: 1px solid var(--border) !important;
+    color: var(--text);
+}
+
+.search-bar i { color: var(--muted) !important; }
+
+.search-bar input {
+    background: transparent !important;
+    color: var(--text) !important;
+}
+
+.search-bar input::placeholder {
+    color: var(--muted-2) !important;
+}
+
+.filter-bar select {
+    color: var(--text) !important;
+    background: transparent !important;
+}
+
+.filter-bar select option {
+    background: var(--panel);
+    color: var(--text);
+}
+
+.showall-pill span {
+    color: var(--text) !important;
+}
+
+.showall-pill {
+    border-color: var(--border) !important;
+}
+.showall-pill:has(input:checked) {
+    border-color: var(--showallcheckedborder) !important;
+    background: var(--showallcheckedbg) !important;
+}
+
+/* ---------- Table ---------- */
+/* .table-container th { color: var(--muted-2) !important; } */
+.table-container td { color: var(--text) !important; }
+
+/* ✅ Restore status colors (must be AFTER td color rule) */
+.table-container td.statusActive {
+    color: #15DA54 !important;
+    font-weight: 600;
+}
+.table-container td.statusInactive {
+    color: #E71D36 !important;
+    font-weight: 600;
+    opacity: 1;
+}
+
+/* Row divider uses theme border */
+.table-container tbody tr {
+    border-bottom: 1px solid var(--border) !important;
+}
+
+/* Inactive row theme-safe */
+tr.row-inactive {
+    color: var(--muted) !important;
+    background: rgba(255,255,255,0.04) !important;
+    opacity: 0.9;
+}
+body:not([data-theme="dark"]) tr.row-inactive {
+    color: #6b7280 !important;
+    background: #efefef !important;
+    opacity: 0.8;
+}
+
+/* ---------- Modals ---------- */
+.modal,
+.confirm-modal,
+.view-header-card,
+.view-item {
+    background: var(--panel) !important;
+    border: 1px solid var(--border) !important;
+    box-shadow: var(--shadow) !important;
+    color: var(--text) !important;
+}
+
+.modal label,
+.confirm-modal h3,
+.confirm-modal p,
+.view-username,
+.view-value,
+.view-section-title {
+    color: var(--text) !important;
+}
+
+.view-meta,
+.time-line,
+.view-label {
+    color: var(--muted-2) !important;
+}
+
+/* Inputs/selects inside modal */
+.modal input,
+.modal select {
+    background: rgba(255,255,255,0.02) !important;
+    color: var(--text) !important;
+    border: 1px solid var(--border) !important;
+}
+
+.modal input::placeholder { color: var(--muted-2) !important; }
+
+.modal select option {
+  background: var(--panel);
+  color: var(--text);
+}
+
+/* Close btn */
+.closeModal-btn {
+    color: var(--text) !important;
+    background: var(--iconbg) !important;
+}
+.closeModal-btn:hover {
+    background: var(--iconbghover) !important;
+}
+
+/* Image preview holder */
+.img-holder {
+    background: var(--iconbg) !important;
+}
+.img-holder i {
+    color: var(--muted) !important;
+}
+
+/* View badges */
+.view-badge {
+    border: 1px solid var(--border) !important;
+    background: rgba(255,255,255,0.04) !important;
+    color: var(--text) !important;
+}
+.view-badge.status.active {
+    border-color: rgba(21,218,84,0.35) !important;
+    background: rgba(21,218,84,0.10) !important;
+}
+.view-badge.status.inactive {
+    border-color: rgba(231,29,54,0.35) !important;
+    background: rgba(231,29,54,0.10) !important;
+}
+
+/* Copy button */
+.copy-btn {
+    border: 1px solid var(--border) !important;
+    background: rgba(255,255,255,0.04) !important;
+    color: var(--text) !important;
+}
+.copy-btn:hover {
+    background: rgba(255,255,255,0.08) !important;
+}
+
+/* Confirm cancel button */
+.cancel-btn {
+    background: var(--cancelbtnbg) !important;
+    color: var(--text) !important;
+    border: 1px solid var(--border) !important;
+}
+.cancel-btn:hover {
+    background: var(--cancelbtnhoverbg) !important;
+}

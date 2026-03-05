@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LaorEat Admin Dashboard</title>
+    <script>
+        (function () {
+            const saved = localStorage.getItem("theme") || "light";
+            document.documentElement.dataset.theme = saved;
+        })();
+    </script>
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.9.0/fonts/remixicon.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/products.css">
+</head>
+<body>
+    <div class="sidebar">
+        <h1 class="menu-logo">LaorEat</h1>
+        <ul>
+            <li id="liDashboard"><a id="navDashboard" href="index.html"><i class="bi bi-grid-fill"></i>Dashboard</a></li>
+            <li id="liOrders"><a id="navOrders" href=""><i class="ri-file-list-fill"></i>Orders</a></li>
+            <li id="liProducts"><a id="navProducts" class="active" href=""><i class="bi bi-fork-knife"></i>Products</a></li>
+            <li id="liReviews"><a id="navReviews" href=""><i class="ri-message-3-line"></i>Reviews</a></li>
+            <li id="liCategories"><a id="navCategories" href=""><i class="ri-menu-search-line"></i>Categories</a></li>
+            <li id="liPromotions"><a id="navPromotions" href=""><i class="ri-coupon-2-fill"></i>Promotions</a></li>
+            <li id="liDelivery"><a id="navDelivery" href=""><i class="ri-takeaway-fill"></i>Delivery</a></li>
+            <li id="liCustomers"><a id="navCustomers" href=""><i class="ri-user-fill"></i>Customers</a></li>
+            <li id="liPayments"><a id="navPayments" href=""><i class="ri-bank-card-fill"></i>Payments</a></li>
+            <li id="liAdmins"><a id="navAdmins" href="admins.html"><i class="ri-shield-user-fill"></i>Admins</a></li> 
+        </ul>
+        <div class="admin-profile-container" id="profileMenu">
+            <div class="profile-left">
+                <div class="profile-image">
+                    <img id="sidebarProfileImage" src="assets/images/default-user.webp" alt="">
+                </div>
+                <div class="profile-details">
+                    <h4 id="sidebarUsername">Admin</h4>
+                    <p id="sidebarRole">Role</p>
+                </div>
+            </div>
+            <div class="dropdown-arrow" id="profileToggle">
+                <i class="ri-arrow-down-s-line"></i>
+            </div>
+
+            <div class="profile-dropdown" id="profileDropdown">
+                <div class="dropdown-item" id="toggleTheme">
+                    <i class="ri-moon-line"></i> Dark Mode
+                </div>
+                <div class="dropdown-divider"></div>
+                <div class="dropdown-item logout-item" id="logoutBtn">
+                    <i class="ri-logout-circle-r-line"></i> Logout
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scrollable Content -->
+    <main class="main-content">
+        <div class="title-container">
+            <h2>Products</h2>
+            <button onclick="openCreateProductModal()" class="btn-create" type="button">
+            <i class="ri-add-line"></i> Create
+            </button>
+        </div>
+        <div class="search-container">
+            <div class="search-bar">
+            <i class="ri-search-line"></i>
+            <input id="productSearch" type="text" placeholder="Search by ID or name">
+            </div>
+            <div class="filter-wrapper">
+            <label class="showall-pill">
+                <input type="checkbox" id="showAllProducts">
+                <span>Show all</span>
+            </label>
+            <div class="filter-bar">
+                <select id="categoryFilter">
+                    <option value="all">All Categories</option>
+                    <!-- <option value="khmer">Khmer Food</option>
+                    <option value="western">Western Food</option>
+                    <option value="healthy">Healthy</option>
+                    <option value="dessert">Dessert</option>
+                    <option value="coffeetea">Coffee & Tea</option>
+                    <option value="softdrink">Soft Drink</option> -->
+                </select>
+            </div>
+
+            <div class="filter-bar">
+                <select id="availabilityFilter">
+                <option value="all">All</option>
+                <option value="available">Available</option>
+                <option value="unavailable">Unavailable</option>
+                </select>
+            </div>
+            </div>
+        </div>
+
+        <div class="table-container">
+            <table>
+            <thead>
+                <tr>
+                    <th style="width: 70px;">ID</th>
+                    <th style="width: 90px;">Image</th>
+                    <th>Name</th>
+                    <th style="width: 160px;">Category</th>
+                    <th style="width: 120px;">Price</th>
+                    <th style="width: 130px;">Discount</th>
+                    <th style="width: 130px;">Available</th>
+                    <th style="width: 110px;">Status</th>
+                    <th style="width: 140px;">Actions</th>
+                </tr>
+            </thead>
+
+            <tbody id="product-table-body">
+            </tbody>
+            </table>
+        </div>
+        <div id="productsPagination" class="pagination"></div>
+    </main>
+
+<!-- Create Product Modal -->
+<div class="modal-overlay" id="createModal">
+    <div class="modal">
+        <div class="popup-top">
+            <h2>Create Product</h2>
+            <button onclick="closeModal()" class="closeModal-btn" type="button">
+                <i class="ri-close-line"></i>
+            </button>
+        </div>
+
+        <div class="form-error" id="createError"></div>
+
+        <p style="margin-top: 16px;">Product Image <span class="requiredStar">*</span></p>
+        <div class="profile-holder">
+            <div class="img-holder product-img-holder" id="productImagePreview">
+                <i class="ri-camera-4-fill"></i>
+            </div>
+
+            <input type="file" id="product-image-upload" accept="image/*" hidden>
+            <button class="upload-btn" type="button" onclick="document.getElementById('product-image-upload').click()">
+                Upload Image
+            </button>
+        </div>
+
+        <label for="product-name">Name <span class="requiredStar">*</span></label>
+        <input type="text" id="product-name" placeholder="Enter product name">
+
+        <label for="product-category">Category <span class="requiredStar">*</span></label>
+        <select id="product-category">
+            <!-- <option value="khmer">Khmer Food</option>
+            <option value="western">Western Food</option>
+            <option value="healthy">Healthy</option>
+            <option value="dessert">Dessert</option>
+            <option value="coffeetea">Coffee & Tea</option>
+            <option value="softdrink">Soft Drink</option> -->
+        </select>
+
+        <div class="row-2">
+            <div>
+                <label for="product-price">Price <span class="requiredStar">*</span></label>
+                <input type="number" id="product-price" placeholder="0.00" step="0.01" min="0">
+            </div>
+
+            <div>
+                <label for="product-unit">Unit Label</label>
+                <input type="text" id="product-unit" placeholder="plate / cup / box...">
+            </div>
+        </div>
+
+        <div class="discount-row">
+            <div class="discount-left">
+                <input type="checkbox" id="discount-active">
+                <label for="discount-active">Discount</label>
+            </div>
+            <div class="discount-right">
+                <input type="number" id="discount-percent" class="mini-input" placeholder="0" min="0" max="100" step="0.01" disabled>
+                <span class="percent-label">%</span>
+            </div>
+        </div>
+
+        <label for="product-description">Description</label>
+        <textarea id="product-description" rows="4" placeholder="Write product description..."></textarea>
+
+        <button onclick="confirmCreateProduct(event)" class="create-btn" type="button">Create</button>
+    </div>
+</div>
+
+
+
+<!-- View Product Modal -->
+<div class="modal-overlay" id="viewModal">
+    <div class="modal view-product-modal">
+        <div class="popup-top">
+            <h2>Product Details</h2>
+            <button type="button" class="closeModal-btn" onclick="closeViewModal()">
+                <i class="ri-close-line"></i>
+            </button>
+        </div>
+
+        <!-- Header card -->
+        <div class="pview-header">
+            <div class="pview-image" id="viewImagePreview">
+                <i class="ri-image-line"></i>
+            </div>
+
+            <div class="pview-info">
+                <div class="pview-title-row">
+                    <div class="pview-name" id="view-name">-</div>
+                    <div class="pview-badges">
+                        <span class="pbadge status" id="view-status">-</span>
+                        <span class="pbadge avail" id="view-available">-</span>
+                        <span class="pbadge discount" id="view-discount">-</span>
+                    </div>
+                </div>
+
+                <div class="pview-sub">
+                    <div class="pmeta"><span class="pmeta-label">ID:</span> <span id="view-id">-</span></div>
+                    <div class="pmeta"><span class="pmeta-label">Category:</span> <span id="view-category">-</span></div>
+                </div>
+
+                <div class="pview-price">
+                    <div class="pprice-now" id="view-price-now">-</div>
+                    <div class="pprice-old" id="view-price-old" style="display:none;">-</div>
+                    <div class="punit" id="view-unit" style="display:none;">-</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Description -->
+        <div class="psection">
+            <div class="psection-title">Description</div>
+            <div class="pdesc" id="view-description">-</div>
+        </div>
+
+        <!-- Dates -->
+        <div class="psection">
+            <div class="psection-title">Dates</div>
+            <div class="pgrid">
+                <div class="pitem">
+                <div class="plabel">Created at</div>
+                <div class="pvalue" id="view-created-at">-</div>
+                </div>
+                <div class="pitem">
+                <div class="plabel">Updated at</div>
+                <div class="pvalue" id="view-updated-at">-</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="view-footer">
+            <button type="button" class="create-btn view-close" onclick="closeViewModal()">Close</button>
+        </div>
+    </div>
+</div>
+
+
+<!-- Update Modal -->
+<div class="modal-overlay" id="updateModal">
+    <div class="modal">
+        <div class="popup-top">
+            <h2>Update Product</h2>
+            <button onclick="closeUpdateModal()" class="closeModal-btn" type="button">
+                <i class="ri-close-line"></i>
+            </button>
+        </div>
+
+        <div class="form-error" id="updateError"></div>
+
+        <!-- Hidden ID -->
+        <input type="hidden" id="update-id">
+
+        <p style="margin-top: 16px;">Product Image</p>
+        <div class="profile-holder">
+        <div class="img-holder product-img-holder" id="updateImagePreview">
+            <i class="ri-camera-4-fill"></i>
+        </div>
+
+        <input type="file" id="update-product-image-upload" accept="image/*" hidden>
+        <button class="upload-btn" type="button"
+            onclick="document.getElementById('update-product-image-upload').click()">
+            Upload Image
+        </button>
+        </div>
+
+        <label for="update-product-name">Name <span class="requiredStar">*</span></label>
+        <input type="text" id="update-product-name" placeholder="Enter product name">
+
+        <label for="update-product-category">Category <span class="requiredStar">*</span></label>
+        <select id="update-product-category">
+
+        </select>
+
+        <div class="row-2">
+        <div>
+            <label for="update-product-price">Price <span class="requiredStar">*</span></label>
+            <input type="number" id="update-product-price" placeholder="0.00" step="0.01" min="0">
+        </div>
+
+        <div>
+            <label for="update-product-unit">Unit Label</label>
+            <input type="text" id="update-product-unit" placeholder="plate / cup / box...">
+        </div>
+        </div>
+
+        <div class="discount-row">
+        <div class="discount-left">
+            <input type="checkbox" id="update-discount-active">
+            <label for="update-discount-active">Discount</label>
+        </div>
+
+        <div class="discount-right">
+            <input type="number"
+            id="update-discount-percent"
+            class="mini-input"
+            placeholder="0"
+            min="0"
+            max="100"
+            step="0.01"
+            disabled>
+            <span class="percent-label">%</span>
+        </div>
+        </div>
+
+        <label for="update-product-description">Description</label>
+        <textarea id="update-product-description" rows="4" placeholder="Write product description..."></textarea>
+        <button onclick="confirmUpdateProduct(event)" class="create-btn updateBtn" type="button">Update</button>
+    </div>
+</div>
+
+
+
+
+
+<!-- Confirmation Modal -->
+<div class="confirm-overlay" id="confirmModal">
+    <div class="confirm-modal">
+        <h3 id="confirmTitle"></h3>
+        <p id="confirmMessage"></p>
+        <div class="confirm-actions">
+            <button class="cancel-btn" id="cancelConfirm" type="button" onclick="closeConfirm()">Cancel</button>
+            <button class="confirm-btn" id="confirmBtn" type="button">Confirm</button>
+        </div>
+    </div>
+</div>
+
+<!-- Success Toast Notification -->
+<div id="toast" class="toast">Hello</div>
+
+
+
+</body>
+<script src="assets/js/script.js" defer></script>
+<script src="assets/js/products.js" defer></script>
+</html>
