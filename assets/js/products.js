@@ -517,52 +517,59 @@ const viewOverlay = document.getElementById("viewModal");
 window.closeViewModal = closeViewModalSafe;
 
 viewOverlay?.addEventListener("click", (e) => {
-  if (e.target === viewOverlay) closeViewModal();
+    if (e.target === viewOverlay) closeViewModal();
 });
 
 function fillViewModal(p) {
-  const disc = discountInfo(p);
+    const disc = discountInfo(p);
 
-  document.getElementById("view-name").textContent = p.name || "-";
-  document.getElementById("view-id").textContent = p.id ?? "-";
-  document.getElementById("view-category").textContent = categoryName(p.category_id);
+    document.getElementById("view-name").textContent = p.name || "-";
+    document.getElementById("view-id").textContent = p.id ?? "-";
+    document.getElementById("view-category").textContent = categoryName(p.category_id);
 
-  const status = document.getElementById("view-status");
-  status.textContent = isOn(p.is_active) ? "Active" : "Inactive";
-  status.className = `pbadge status ${isOn(p.is_active) ? "active" : "inactive"}`;
+    const status = document.getElementById("view-status");
+    status.textContent = isOn(p.is_active) ? "Active" : "Inactive";
+    status.className = `pbadge status ${isOn(p.is_active) ? "active" : "inactive"}`;
 
-  const avail = document.getElementById("view-available");
-  avail.textContent = isOn(p.is_available) ? "Available" : "Unavailable";
-  avail.className = `pbadge avail ${isOn(p.is_available) ? "on" : "off"}`;
+    const avail = document.getElementById("view-available");
+    avail.textContent = isOn(p.is_available) ? "Available" : "Unavailable";
+    avail.className = `pbadge avail ${isOn(p.is_available) ? "on" : "off"}`;
 
-  const discEl = document.getElementById("view-discount");
-  discEl.textContent = disc.has ? `${Number(disc.pct).toFixed(0)}%` : "No Discount";
-  discEl.className = `pbadge discount ${disc.has ? "on" : "off"}`;
+    const discEl = document.getElementById("view-discount");
+    const pct = Number(p.discount_percent || 0);
+    const active = isOn(p.discount_active);
+    if (pct > 0) {
+        discEl.textContent = `${pct.toFixed(0)}%`;
+        discEl.className = `pbadge discount ${active ? "on" : "off"}`;
+    } else {
+        discEl.textContent = "No Discount";
+        discEl.className = "pbadge discount off";
+    }
 
-  document.getElementById("view-price-now").textContent = disc.has ? money(disc.now) : money(p.price);
+    document.getElementById("view-price-now").textContent = disc.has ? money(disc.now) : money(p.price);
 
-  const old = document.getElementById("view-price-old");
-  if (disc.has) {
-    old.style.display = "";
-    old.textContent = money(disc.old);
-  } else {
-    old.style.display = "none";
-  }
+    const old = document.getElementById("view-price-old");
+    if (disc.has) {
+        old.style.display = "";
+        old.textContent = money(disc.old);
+    } else {
+        old.style.display = "none";
+    }
 
-  const unit = document.getElementById("view-unit");
-  if ((p.unit_label || "").trim()) {
-    unit.style.display = "";
-    unit.textContent = `/${p.unit_label}`;
-  } else {
-    unit.style.display = "none";
-  }
+    const unit = document.getElementById("view-unit");
+    if ((p.unit_label || "").trim()) {
+        unit.style.display = "";
+        unit.textContent = `/${p.unit_label}`;
+    } else {
+        unit.style.display = "none";
+    }
 
-  document.getElementById("view-description").textContent = p.description || "-";
-  document.getElementById("view-created-at").textContent = formatDateTime(p.created_at) || "-";
-  document.getElementById("view-updated-at").textContent = formatDateTime(p.updated_at) || "-";
+    document.getElementById("view-description").textContent = p.description || "-";
+    document.getElementById("view-created-at").textContent = formatDateTime(p.created_at) || "-";
+    document.getElementById("view-updated-at").textContent = formatDateTime(p.updated_at) || "-";
 
-  const img = document.getElementById("viewImagePreview");
-  img.innerHTML = p.image_url ? `<img src="${p.image_url}" alt="Product">` : `<i class="ri-image-line"></i>`;
+    const img = document.getElementById("viewImagePreview");
+    img.innerHTML = p.image_url ? `<img src="${p.image_url}" alt="Product">` : `<i class="ri-image-line"></i>`;
 }
 
 function openViewModal(p) {
