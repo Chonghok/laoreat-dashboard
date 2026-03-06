@@ -60,7 +60,6 @@
     color: var(--muted-2);
 }
 
-/* Right side */
 .filter-wrapper{
     display:flex;
     align-items:center;
@@ -68,63 +67,38 @@
     flex-wrap:wrap;
 }
 
-.filter-bar{
-    display:flex;
-    align-items:center;
-
-    background: var(--panel);
-    border: 1px solid var(--border);
-    border-radius:8px;
-    padding: 12px 10px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.filter-bar select{
-    border:none;
-    outline:none;
-    min-width: 130px;
-    font-size: 12px;
-    background: transparent;
-    color: var(--text);
-}
-
-.filter-bar select option{
-    background: var(--panel);
-    color: var(--text);
-}
-
-/* Show all pill */
 .showall-pill{
     display:inline-flex;
     align-items:center;
     gap:10px;
-
     padding: 12px 12px;
     border-radius: 8px;
     border: 1px solid var(--border);
     background: var(--panel);
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-
     cursor: pointer;
     user-select: none;
     transition: all .2s ease;
 }
+
 .showall-pill input[type="checkbox"]{
     width: 14px;
     height: 14px;
     margin: 0;
 }
+
 .showall-pill span{
     font-size:12px;
     font-weight:500;
     color: var(--text);
 }
+
 .showall-pill:has(input:checked){
     border-color: var(--showallcheckedborder);
     background: var(--showallcheckedbg);
 }
 
-/* ---------- Table ---------- */
+/* table */
 .table-container{
     margin: 0 0 20px;
     background: var(--panel);
@@ -138,7 +112,7 @@
 .table-container table{
     width: 100%;
     border-collapse:collapse;
-    min-width: 980px; /* prevents squish */
+    min-width: 760px;
 }
 
 .table-container th,
@@ -170,50 +144,15 @@ html:not([data-theme="dark"]) tr.row-inactive {
     opacity: 0.8;
 }
 
-/* cells */
-.name-cell{
+.category-name-cell{
     text-align: left;
-    max-width: 260px;
+    max-width: 280px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
-.category-cell{
-    max-width: 160px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.price-cell{
-   font-weight: 600;
-}
-
-.price-wrap{
-    display: inline-flex;
-    flex-direction: column;
-    align-items: center;
-    line-height: 1.1;
-    gap: 3px;
-}
-
-.price-discounted{
-    font-weight: 800;
-    font-size: 12px;
-    color: var(--text);
-}
-
-.price-original{
-    font-weight: 600;
-    font-size: 11px;
-    color: var(--muted-2);
-    text-decoration: line-through;
-    opacity: 0.9;
-}
-
-/* product image */
-.product-img{
+.category-img{
     width: 44px;
     height: 44px;
     border-radius: 12px;
@@ -225,87 +164,13 @@ html:not([data-theme="dark"]) tr.row-inactive {
     color: #15DA54;
     font-weight: 700;
 }
+
 .status-cell.inactive{
     color: #E71D36;
     font-weight: 700;
 }
 
-/* badges */
-.badge{
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 5px 10px;
-    border-radius: 999px;
-    font-size: 12px;
-    border: 1px solid var(--border);
-    background: rgba(255,255,255,0.04);
-    color: var(--text);
-}
-
-.badge.discount{
-    border-color: rgba(67,121,238,0.70);
-    background: rgba(67,121,238,0.22);  /* more visible */
-    color: #4684ff;                      /* brighter text for dark mode */
-    font-weight: 800;
-}
-
-.badge.none{
-    border: 1px dashed var(--border);
-    background: rgba(156,163,175,0.16);
-    color: var(--muted-2);     /* ✅ theme-safe */
-    font-weight: 700;
-}
-
-/* ---------- Availability Toggle (is_available) ---------- */
-.switch{
-    position: relative;
-    display: inline-block;
-    width: 46px;
-    height: 26px;
-}
-.switch input{ display:none; }
-
-.slider{
-    position: absolute;
-    cursor: pointer;
-    inset: 0;
-    background: rgba(0,0,0,0.15);
-    border: 1px solid var(--border);
-    transition: .2s;
-    border-radius: 999px;
-}
-
-html[data-theme="dark"] .slider{
-    background: rgba(255,255,255,0.08);
-}
-
-.slider:before{
-    content:"";
-    position:absolute;
-    height: 20px;
-    width: 20px;
-    left: 3px;
-    top: 50%;
-    transform: translateY(-50%);
-    background: #fff;
-    border: 1px solid var(--border);
-    transition: .2s;
-    border-radius: 50%;
-}
-
-.switch input:checked + .slider{
-    background: #15DA54;   
-    border-color: #15DA54;
-}
-
-.switch input:checked + .slider:before{
-    transform: translate(20px, -50%);
-    border-color: rgba(21,218,84,1);    
-    box-shadow: 0 0 6px rgba(21,218,84,0.6);
-}
-
-/* ---------- Actions ---------- */
+/* actions */
 .action-icon{
     display: flex;
     justify-content: center;
@@ -344,23 +209,15 @@ html[data-theme="dark"] .slider{
     filter: brightness(0.9);
 }
 
-
-/* =========================
-   PRODUCTS MODAL (fresh)
-   Theme-safe (light + dark)
-========================= */
-
-/* Overlay */
+/* modal */
 .modal-overlay{
     position: fixed;
     inset: 0;
     background: rgba(0,0,0,0.45);
     backdrop-filter: blur(3px);
-
     display: flex;
     align-items: center;
     justify-content: center;
-
     opacity: 0;
     pointer-events: none;
     transition: opacity .18s ease;
@@ -372,20 +229,16 @@ html[data-theme="dark"] .slider{
     pointer-events: auto;
 }
 
-/* Modal box */
 .modal{
     width: min(520px, 92vw);
     max-height: 90vh;
     overflow: auto;
-
     background: var(--panel);
     color: var(--text);
     border: 1px solid var(--border);
     border-radius: 14px;
     box-shadow: var(--shadow);
-
     padding: 18px 18px;
-
     transform: scale(0.9);
     transition: transform .3s ease;
     scrollbar-gutter: stable both-edges;
@@ -395,7 +248,6 @@ html[data-theme="dark"] .slider{
     transform: scale(1);
 }
 
-/* Scrollbar (optional but nice) */
 .modal::-webkit-scrollbar{ width: 10px; }
 .modal::-webkit-scrollbar-track{ background: transparent; margin: 8px 0; }
 .modal::-webkit-scrollbar-thumb{
@@ -407,7 +259,6 @@ html[data-theme="dark"] .modal::-webkit-scrollbar-thumb{
     background: rgba(255,255,255,0.18);
 }
 
-/* Header row */
 .popup-top{
     display: flex;
     align-items: center;
@@ -415,7 +266,6 @@ html[data-theme="dark"] .modal::-webkit-scrollbar-thumb{
     margin-bottom: 10px;
 }
 
-/* Close button */
 .closeModal-btn{
     background: var(--iconbg);
     color: var(--text);
@@ -431,7 +281,6 @@ html[data-theme="dark"] .modal::-webkit-scrollbar-thumb{
     background: var(--iconbghover);
 }
 
-/* Error box */
 .form-error{
     display: none;
     border: 1px solid rgba(231,29,54,0.35);
@@ -442,17 +291,16 @@ html[data-theme="dark"] .modal::-webkit-scrollbar-thumb{
     font-size: 13px;
     margin: 10px 0 12px;
 }
+
 html:not([data-theme="dark"]) .form-error{
     color: #991b1b;
     background: #fee2e2;
     border-color: rgba(231,29,54,0.25);
 }
 
-/* Labels */
 .modal label{
     display:block;
     font-size: 13px;
-    /* font-weight: 700; */
     margin: 10px 0 6px;
     color: var(--text);
 }
@@ -462,9 +310,7 @@ html:not([data-theme="dark"]) .form-error{
     margin-left: 3px;
 }
 
-/* Inputs/select/textarea */
 .modal input,
-.modal select,
 .modal textarea{
     width: 100%;
     padding: 11px 12px;
@@ -479,38 +325,25 @@ html:not([data-theme="dark"]) .form-error{
 
 .modal input::placeholder,
 .modal textarea::placeholder{
-  color: var(--muted-2);
-}
-
-.modal textarea{
-    resize: vertical;
-    min-height: 92px;
+    color: var(--muted-2);
 }
 
 .modal input:focus,
-.modal select:focus,
 .modal textarea:focus{
     border-color: rgba(67,121,238,0.75);
     box-shadow: 0 0 0 3px rgba(67,121,238,0.18);
 }
 
-.modal select option{
-    background: var(--panel);
-    color: var(--text);
-}
-
-/* Image preview section */
 .profile-holder{
     margin: 10px 0 6px;
 }
 
 .img-holder{
-    width: 210px;
-    height: 210px;
-    border-radius: 16px; /* product image feels better as rounded square */
+    width: 220px;
+    height: 220px;
+    border-radius: 16px;
     background: var(--iconbg);
     border: 1px dashed var(--border);
-
     display:flex;
     align-items:center;
     justify-content:center;
@@ -519,7 +352,7 @@ html:not([data-theme="dark"]) .form-error{
 }
 
 .img-holder i{
-    font-size: 54px;
+    font-size: 64px;
     color: var(--muted);
 }
 
@@ -529,7 +362,6 @@ html:not([data-theme="dark"]) .form-error{
     object-fit: cover;
 }
 
-/* Upload button */
 .upload-btn{
     display:block;
     margin: 14px auto 8px;
@@ -544,79 +376,9 @@ html:not([data-theme="dark"]) .form-error{
 }
 
 .upload-btn:hover{
-  filter: brightness(0.92);
+    filter: brightness(0.92);
 }
 
-/* 2-column rows */
-.row-2{
-    display:grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-}
-@media (max-width: 520px){
-    .row-2{ grid-template-columns: 1fr; }
-}
-
-.discount-row{
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    /* align-items: center; */
-    /* justify-content: space-between; */
-    margin: 15px 0;
-}
-
-/* Left side */
-.discount-left{
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.discount-left input[type="checkbox"]{
-  width: 18px;
-  height: 18px;
-  margin: 0;
-  accent-color: var(--accent);
-  cursor: pointer;
-}
-
-.discount-left label{
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-}
-
-/* Right side */
-.discount-right{
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.mini-input{
-    width: 100%;
-    height: 38px;
-    padding: 6px 10px;
-    border-radius: 10px;
-    border: 1px solid var(--border);
-    background: var(--panel);
-    color: var(--text);
-    font-size: 14px;
-    text-align: center;
-}
-
-.percent-label{
-    font-size: 14px;
-    font-weight: 700;
-    color: var(--muted-2);
-}
-
-.mini-input:disabled{
-    opacity: 0.5;
-    cursor: not-allowed;
-}
-
-/* Create button */
 .create-btn{
     display: block;
     margin: 12px auto;
@@ -636,6 +398,7 @@ html:not([data-theme="dark"]) .form-error{
 }
 
 .create-btn.view-close {
+    margin-top: 20px;
     background: rgb(175, 175, 175);
 }
 
@@ -651,19 +414,12 @@ html:not([data-theme="dark"]) .form-error{
     background: #1956da;
 }
 
-
-
-/* =========================
-   PRODUCT VIEW MODAL
-   Fresh + theme-safe
-========================= */
-
-.view-product-modal{
-    width: min(760px, 92vw);
+/* category view modal */
+.view-category-modal{
+    width: min(620px, 92vw);
 }
 
-/* Header layout */
-.pview-header{
+.cview-header{
     margin-top: 12px;
     padding: 14px;
     border: 1px solid var(--border);
@@ -674,10 +430,10 @@ html:not([data-theme="dark"]) .form-error{
     align-items: center;
 }
 
-.pview-image{
-    width: 120px;
-    height: 120px;
-    border-radius: 16px;
+.cview-image{
+    width: 100px;
+    height: 100px;
+    border-radius: 14px;
     overflow: hidden;
     border: 1px solid var(--border);
     background: var(--iconbg);
@@ -686,45 +442,44 @@ html:not([data-theme="dark"]) .form-error{
     flex: 0 0 auto;
 }
 
-.pview-image img{
+.cview-image img{
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
 
-.pview-image i{
+.cview-image i{
     font-size: 40px;
     color: var(--muted);
 }
 
-.pview-info{
+.cview-info{
     flex: 1;
     min-width: 0;
 }
 
-.pview-title-row{
+.cview-title-row{
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
     gap: 10px;
 }
 
-.pview-name{
+.cview-name{
     font-size: 20px;
     font-weight: 800;
     line-height: 1.2;
     word-break: break-word;
 }
 
-/* Badges */
-.pview-badges{
+.cview-badges{
     display: flex;
     gap: 8px;
     flex-wrap: wrap;
     justify-content: flex-end;
 }
 
-.pbadge{
+.cbadge{
     font-size: 12px;
     font-weight: 700;
     padding: 5px 10px;
@@ -735,152 +490,97 @@ html:not([data-theme="dark"]) .form-error{
     white-space: nowrap;
 }
 
-/* Status badge */
-.pbadge.status.active{
+.cbadge.status.active{
     border-color: rgba(21,218,84,0.35);
     background: rgba(21,218,84,0.10);
     color: #15DA54;
 }
-.pbadge.status.inactive{
+.cbadge.status.inactive{
     border-color: rgba(231,29,54,0.35);
     background: rgba(231,29,54,0.10);
     color: #E71D36;
 }
 
-/* Availability badge */
-.pbadge.avail.on{
-    border-color: rgba(21,218,84,0.30);
-    background: rgba(21,218,84,0.08);
-    color: #15DA54;
-}
-.pbadge.avail.off{
-    border-color: rgba(156,163,175,0.35);
-    background: rgba(156,163,175,0.12);
-    color: var(--muted-2);
-}
-
-/* Discount badge */
-.pbadge.discount.on{
-    border-color: rgba(67,121,238,0.70);
-    background: rgba(67,121,238,0.22);
-    color: #4684ff;
-}
-.pbadge.discount.off{
-    border: 1px dashed var(--border);
-    background: rgba(156,163,175,0.14);
-    color: var(--muted-2);
-}
-
-/* Sub meta row */
-.pview-sub{
+.cview-sub{
     margin-top: 8px;
     display: flex;
     gap: 14px;
     flex-wrap: wrap;
 }
 
-.pmeta{
+.cmeta{
     font-size: 13px;
     color: var(--muted-2);
 }
 
-.pmeta-label{
+.cmeta-label{
     color: var(--muted);
     margin-right: 6px;
 }
 
-/* Price block */
-.pview-price{
-    margin-top: 10px;
-    display: flex;
-    align-items: baseline;
-    gap: 10px;
-    flex-wrap: wrap;
-}
-
-.pprice-now{
-    font-size: 18px;
-    font-weight: 700;
-    color: var(--text);
-}
-
-.pprice-old{
-    font-size: 13px;
-    font-weight: 700;
-    color: var(--muted-2);
-    text-decoration: line-through;
-}
-
-.punit{
-    font-size: 13px;
-    font-weight: 700;
-    color: var(--muted-2);
-}
-
-/* Sections */
-.psection{
+.csection{
     margin-top: 14px;
 }
 
-.psection-title{
+.csection-title{
     font-weight: 700;
     margin-bottom: 8px;
 }
 
-.pdesc{
-    border: 1px solid var(--border);
-    background: rgba(255,255,255,0.03);
-    border-radius: 12px;
-    padding: 12px;
-    color: var(--text);
-    line-height: 1.5;
-    font-size: 13px;
-    white-space: pre-wrap;
-}
-
-.pgrid{
+.cgrid{
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 12px;
 }
 
 @media (max-width: 560px){
-    .pgrid{ grid-template-columns: 1fr; }
+    .cgrid{ grid-template-columns: 1fr; }
+    .cview-header{
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .cview-image{
+        width: 100%;
+        height: 180px;
+    }
+    .cview-title-row{
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .cview-badges{
+        justify-content: flex-start;
+    }
 }
 
-.pitem{
+.citem{
     border: 1px solid var(--border);
     border-radius: 12px;
     padding: 12px;
     background: rgba(255,255,255,0.03);
 }
 
-.plabel{
+.clabel{
     font-size: 12px;
     color: var(--muted-2);
     margin-bottom: 6px;
     font-weight: 700;
 }
 
-.pvalue{
+.cvalue{
     font-size: 14px;
     font-weight: 600;
     color: var(--text);
 }
 
-/* =========================
-   CONFIRM MODAL (theme-safe)
-========================= */
+/* confirm modal */
 .confirm-overlay{
     position: fixed;
     inset: 0;
     background: rgba(0,0,0,0.50);
     backdrop-filter: blur(2px);
-
     display: flex;
     align-items: center;
     justify-content: center;
-
     opacity: 0;
     pointer-events: none;
     transition: opacity .18s ease;
@@ -901,13 +601,12 @@ html:not([data-theme="dark"]) .form-error{
     padding: 18px 18px;
     text-align: center;
     color: var(--text);
-
     transform: translateY(8px) scale(.98);
     transition: transform .18s ease;
 }
 
 .confirm-overlay.active .confirm-modal{
-  transform: translateY(0) scale(1);
+    transform: translateY(0) scale(1);
 }
 
 .confirm-modal h3{
@@ -941,7 +640,6 @@ html:not([data-theme="dark"]) .form-error{
     transition: filter .15s ease, background .15s ease;
 }
 
-/* Cancel button (theme-safe) */
 .cancel-btn{
     background: var(--cancelbtnbg);
     color: var(--text);
@@ -950,13 +648,11 @@ html:not([data-theme="dark"]) .form-error{
     background: var(--cancelbtnhoverbg);
 }
 
-/* Confirm base (you will add classes like .disableConfirm / .updateConfirm etc.) */
 .confirm-btn{
     color: #fff;
     border: none;
 }
 
-/* Use your existing confirm types (same names you already use in JS) */
 .confirm-btn.createConfirm,
 .confirm-btn.enableConfirm{
     background: #15DA54;
@@ -980,14 +676,11 @@ html:not([data-theme="dark"]) .form-error{
     filter: brightness(.92);
 }
 
-
-
-/* Toast Styles */
+/* toast */
 .toast {
     position: fixed;
     top: 20px;
     right: 20px;
-    /* min-width: 260px; */
     padding: 14px 18px;
     border-radius: 8px;
     font-size: 14px;
@@ -1000,7 +693,6 @@ html:not([data-theme="dark"]) .form-error{
     z-index: 3000;
 }
 
-/* States */
 .toast.success {
     background: #1fca5e;
 }
@@ -1010,7 +702,7 @@ html:not([data-theme="dark"]) .form-error{
 }
 
 .toast.warning {
-    background: #f59e0b;  /* amber */
+    background: #f59e0b;
 }
 
 .toast.show {
@@ -1018,7 +710,7 @@ html:not([data-theme="dark"]) .form-error{
     transform: translateX(0);
 }
 
-
+/* pagination */
 .pagination{
     display: flex;
     gap: 10px;
