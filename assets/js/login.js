@@ -1,4 +1,4 @@
-const API_BASE = "http://127.0.0.1:8000";
+const API_BASE = window.API_BASE;
 
 // storage helpers
 function setAuth(token, admin, remember) {

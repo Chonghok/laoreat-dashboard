@@ -450,33 +450,33 @@ document.getElementById("discount-active")?.addEventListener("change", function 
 });
 
 window.confirmCreateProduct = function (e) {
-  if (e) e.preventDefault();
-  if (!canEditProducts()) return showToast("No permission", "error");
+    if (e) e.preventDefault();
+    if (!canEditProducts()) return showToast("No permission", "error");
 
-  clearCreateError();
+    clearCreateError();
 
-  const img = document.getElementById("product-image-upload").files?.[0];
-  const name = document.getElementById("product-name").value.trim();
-  const categoryId = document.getElementById("product-category").value;
-  const price = Number(document.getElementById("product-price").value);
+    const img = document.getElementById("product-image-upload").files?.[0];
+    const name = document.getElementById("product-name").value.trim();
+    const categoryId = document.getElementById("product-category").value;
+    const price = Number(document.getElementById("product-price").value);
 
-  const discOn = document.getElementById("discount-active").checked;
-  const discPct = Number(document.getElementById("discount-percent").value);
+    const discOn = document.getElementById("discount-active").checked;
+    const discPct = Number(document.getElementById("discount-percent").value);
 
-  if (!img) return showCreateError("Product image is required.");
-  if (!name) return showCreateError("Name is required.");
-  if (!categoryId) return showCreateError("Category is required.");
-  if (!Number.isFinite(price) || price < 0) return showCreateError("Invalid price.");
-  if (discOn && (!Number.isFinite(discPct) || discPct <= 0 || discPct > 100)) {
-    return showCreateError("Discount % must be 1 - 100.");
-  }
+    if (!img) return showCreateError("Product image is required.");
+    if (!name) return showCreateError("Name is required.");
+    if (!categoryId) return showCreateError("Category is required.");
+    if (!Number.isFinite(price) || price < 0) return showCreateError("Invalid price.");
+    if (discOn && (!Number.isFinite(discPct) || discPct <= 0 || discPct > 100)) {
+        return showCreateError("Discount % must be 1 - 100.");
+    }
 
-  openConfirm({
-    title: "Create Product",
-    message: "Create this product?",
-    type: "createConfirm",
-    onConfirm: createProduct
-  });
+    openConfirm({
+        title: "Create Product",
+        message: "Create this product?",
+        type: "createConfirm",
+        onConfirm: createProduct
+    });
 };
 
 async function createProduct() {
@@ -500,7 +500,7 @@ async function createProduct() {
         closeConfirm();
         closeModal();
         
-        await loadProducts();
+        // await loadProducts();
         currentPage = 1;
         render();
         showToast("Product created");

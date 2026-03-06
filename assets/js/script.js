@@ -1,4 +1,4 @@
-const API_BASE = "http://127.0.0.1:8000";
+const API_BASE = window.API_BASE;
 // ✅ one shared promise so every page waits the same auth request
 window.__AUTH_READY__ = null;
 
