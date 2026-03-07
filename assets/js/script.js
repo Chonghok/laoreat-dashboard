@@ -1,5 +1,4 @@
 const API_BASE = window.API_BASE;
-// ✅ one shared promise so every page waits the same auth request
 window.__AUTH_READY__ = null;
 
 function getToken() {
@@ -17,13 +16,11 @@ async function requireAuth() {
         return null;
     }
 
-    // ✅ quick cache
     const cached = sessionStorage.getItem("admin_cache");
     const cachedAt = Number(sessionStorage.getItem("admin_cache_at") || 0);
     const fresh = Date.now() - cachedAt < 60_000; // 60 seconds
 
     if (cached && fresh) {
-        // validate in background (doesn't block)
         fetchMe(token).then((admin) => {
             if (admin) {
                 sessionStorage.setItem("admin_cache", JSON.stringify(admin));
@@ -65,6 +62,28 @@ function logoutLocal() {
     window.location.href = "login.html";
 }
 
+function showStartupLoading(titleText = "Connecting to server...") {
+    const overlay = document.getElementById("startupLoading");
+    if (!overlay) return;
+
+    overlay.style.display = "flex";
+    overlay.classList.remove("hidden");
+
+    const title = overlay.querySelector("h3");
+    if (title) title.textContent = titleText;
+}
+
+function hideStartupLoading() {
+    const overlay = document.getElementById("startupLoading");
+    if (!overlay) return;
+
+    overlay.classList.add("hidden");
+
+    setTimeout(() => {
+        overlay.style.display = "none";
+    }, 250);
+}
+
 async function logoutAdmin() {
     const token = getToken();
     if (!token) return logoutLocal();
@@ -84,7 +103,6 @@ function blockNoPermission({ title, message }) {
     const main = document.querySelector(".main-content");
     if (main) main.style.display = "none";
 
-    // create overlay if not exist
     let overlay = document.getElementById("noPermissionOverlay");
     if (!overlay) {
         overlay = document.createElement("div");
@@ -149,7 +167,6 @@ function applyRoleUI(role) {
         el.style.display = allowed.has(key) ? "" : "none";
     });
 
-    // Optional: show better role label
     const roleLabel = {
         superadmin: "Super Admin",
         manager: "Manager",
@@ -159,12 +176,27 @@ function applyRoleUI(role) {
     if (roleEl) roleEl.textContent = roleLabel[role] || role;
 }
 
+function hasFreshAdminCache() {
+    const cached = sessionStorage.getItem("admin_cache");
+    const cachedAt = Number(sessionStorage.getItem("admin_cache_at") || 0);
+    return !!cached && (Date.now() - cachedAt < 60_000);
+}
+
 document.addEventListener("DOMContentLoaded", () => {
-    // 1) instant UI
     setupTheme();
     wireDropdown();
-    // 2) shared auth promise (so other scripts can await it)
-    window.__AUTH_READY__ = initAuthAndUI();
+
+    let loadingTimer = null;
+    if (getToken() && !hasFreshAdminCache()) {
+        loadingTimer = setTimeout(() => {
+            showStartupLoading("Loading dashboard...");
+        }, 600);
+    }
+
+    window.__AUTH_READY__ = initAuthAndUI().finally(() => {
+        if (loadingTimer) clearTimeout(loadingTimer);
+        hideStartupLoading();
+    });
 });
 
 function wireDropdown() {
@@ -218,14 +250,15 @@ async function initAuthAndUI() {
 
 function setupTheme() {
     const btn = document.getElementById("toggleTheme");
-    // const icon = btn.querySelector("i");
-
     const saved = localStorage.getItem("theme") || "light";
     document.documentElement.dataset.theme = saved;
+
+    if (!btn) return;
+
     updateThemeButton(saved);
 
     btn.addEventListener("click", (e) => {
-        e.stopPropagation(); // don’t close dropdown
+        e.stopPropagation();
         const current = document.documentElement.dataset.theme || "light";
         const next = current === "dark" ? "light" : "dark";
 

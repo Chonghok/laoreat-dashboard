@@ -108,3 +108,18 @@ body {
     object-fit: cover;
     object-position: left;
 }
+
+.login-status {
+    margin-top: 12px;
+    font-size: 14px;
+    color: #666;
+    min-height: 20px;
+}
+
+.login-status.info {
+    color: #4379EE;
+}
+
+.login-status.error {
+    color: #d93025;
+}

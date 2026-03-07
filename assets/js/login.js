@@ -1,18 +1,28 @@
 const API_BASE = window.API_BASE;
 
-// storage helpers
 function setAuth(token, admin, remember) {
     const store = remember ? localStorage : sessionStorage;
     store.setItem("admin_token", token);
     store.setItem("admin_profile", JSON.stringify(admin));
 
-    // optional: clear other storage to avoid “stuck” confusion
     (remember ? sessionStorage : localStorage).removeItem("admin_token");
     (remember ? sessionStorage : localStorage).removeItem("admin_profile");
 }
 
 function getToken() {
     return localStorage.getItem("admin_token") || sessionStorage.getItem("admin_token");
+}
+
+async function warmUpApi() {
+    try {
+        await fetch(`${API_BASE}/api/health`, {
+            method: "GET",
+            cache: "no-store"
+        });
+        return true;
+    } catch {
+        return false;
+    }
 }
 
 async function loginAdmin(login, password, remember) {
@@ -39,12 +49,12 @@ async function loginAdmin(login, password, remember) {
     return { ok: true };
 }
 
-// handle form
 document.addEventListener("DOMContentLoaded", () => {
     const form = document.querySelector("form");
     if (!form) return;
 
-    // OPTIONAL: if already logged in, go to admin page
+    const statusEl = document.getElementById("loginStatus");
+
     const token = getToken();
     if (token) {
         window.location.href = "index.html";
@@ -60,15 +70,36 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const btn = form.querySelector("button[type='submit']");
         btn.disabled = true;
-        btn.textContent = "Logging in...";
+        btn.textContent = "Connecting to server...";
+
+        if (statusEl) {
+            statusEl.textContent = "Free hosting may take 20–30 seconds to wake up.";
+            statusEl.className = "login-status info";
+        }
 
         try {
-        const result = await loginAdmin(login, password, remember);
-        if (!result.ok) {
-            alert(result.message);
-            return;
-        }
-        window.location.href = "index.html";
+            await warmUpApi();
+            btn.textContent = "Logging in...";
+
+            const result = await loginAdmin(login, password, remember);
+
+            if (!result.ok) {
+                if (statusEl) {
+                    statusEl.textContent = result.message;
+                    statusEl.className = "login-status error";
+                }
+                else {
+                    alert(result.message);
+                }
+                return;
+            }
+
+            if (statusEl) {
+                statusEl.textContent = "Login successful! Redirecting...";
+                statusEl.className = "login-status info";
+            }
+            
+            window.location.href = "index.html";
         } finally {
             btn.disabled = false;
             btn.textContent = "Login";
