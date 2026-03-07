@@ -61,7 +61,7 @@ body {
 .startup-loading{
     position: fixed;
     inset: 0;
-    display: flex;
+    display: none;
     align-items: center;
     justify-content: center;
     background: rgba(243, 244, 246, 0.70);

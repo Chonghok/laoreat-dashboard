@@ -56,6 +56,17 @@ async function fetchMe(token) {
     return json.admin;
 }
 
+async function warmUpApi() {
+    try {
+        await fetch(`${API_BASE}/api/health`, {
+            method: "GET",
+            cache: "no-store"
+        });
+    } catch (_) {
+        // ignore
+    }
+}
+
 function logoutLocal() {
     localStorage.clear();
     sessionStorage.clear();
@@ -182,21 +193,37 @@ function hasFreshAdminCache() {
     return !!cached && (Date.now() - cachedAt < 60_000);
 }
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
     setupTheme();
     wireDropdown();
 
     let loadingTimer = null;
-    if (getToken() && !hasFreshAdminCache()) {
+    let loadingTextTimer = null;
+
+    const needsWakeUp = !!getToken() && !hasFreshAdminCache();
+
+    if (needsWakeUp) {
         loadingTimer = setTimeout(() => {
+            showStartupLoading("Connecting to server...");
+        }, 300);
+
+        loadingTextTimer = setTimeout(() => {
             showStartupLoading("Loading dashboard...");
-        }, 600);
+        }, 2500);
     }
 
-    window.__AUTH_READY__ = initAuthAndUI().finally(() => {
+    try {
+        if (needsWakeUp) {
+            await warmUpApi();
+        }
+
+        window.__AUTH_READY__ = initAuthAndUI();
+        await window.__AUTH_READY__;
+    } finally {
         if (loadingTimer) clearTimeout(loadingTimer);
+        if (loadingTextTimer) clearTimeout(loadingTextTimer);
         hideStartupLoading();
-    });
+    }
 });
 
 function wireDropdown() {
