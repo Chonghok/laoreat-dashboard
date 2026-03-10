@@ -73,7 +73,7 @@ document.addEventListener("DOMContentLoaded", () => {
         btn.textContent = "Connecting to server...";
 
         if (statusEl) {
-            statusEl.textContent = "Free hosting may take 20–30 seconds to wake up.";
+            statusEl.textContent = "Free hosting may take 20-30 seconds to wake up.";
             statusEl.className = "login-status info";
         }
 

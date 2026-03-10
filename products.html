@@ -23,7 +23,7 @@
             <div class="startup-spinner"></div>
             <h3>Connecting to server...</h3>
             <p>Please wait while the dashboard loads.</p>
-            <small>Free hosting may take 20–30 seconds to wake up.</small>
+            <small>Free hosting may take 20-30 seconds to wake up.</small>
         </div>
     </div>
 
@@ -88,12 +88,6 @@
             <div class="filter-bar">
                 <select id="categoryFilter">
                     <option value="all">All Categories</option>
-                    <!-- <option value="khmer">Khmer Food</option>
-                    <option value="western">Western Food</option>
-                    <option value="healthy">Healthy</option>
-                    <option value="dessert">Dessert</option>
-                    <option value="coffeetea">Coffee & Tea</option>
-                    <option value="softdrink">Soft Drink</option> -->
                 </select>
             </div>
 
@@ -159,12 +153,6 @@
 
         <label for="product-category">Category <span class="requiredStar">*</span></label>
         <select id="product-category">
-            <!-- <option value="khmer">Khmer Food</option>
-            <option value="western">Western Food</option>
-            <option value="healthy">Healthy</option>
-            <option value="dessert">Dessert</option>
-            <option value="coffeetea">Coffee & Tea</option>
-            <option value="softdrink">Soft Drink</option> -->
         </select>
 
         <div class="row-2">
@@ -174,7 +162,7 @@
             </div>
 
             <div>
-                <label for="product-unit">Unit Label</label>
+                <label for="product-unit">Unit Label <span class="requiredStar">*</span></label>
                 <input type="text" id="product-unit" placeholder="plate / cup / box...">
             </div>
         </div>
@@ -190,7 +178,7 @@
             </div>
         </div>
 
-        <label for="product-description">Description</label>
+        <label for="product-description">Description <span class="requiredStar">*</span></label>
         <textarea id="product-description" rows="4" placeholder="Write product description..."></textarea>
 
         <button onclick="confirmCreateProduct(event)" class="create-btn" type="button">Create</button>
@@ -281,7 +269,7 @@
         <!-- Hidden ID -->
         <input type="hidden" id="update-id">
 
-        <p style="margin-top: 16px;">Product Image</p>
+        <p style="margin-top: 16px;">Product Image <span class="requiredStar">*</span></p>
         <div class="profile-holder">
         <div class="img-holder product-img-holder" id="updateImagePreview">
             <i class="ri-camera-4-fill"></i>
@@ -309,7 +297,7 @@
         </div>
 
         <div>
-            <label for="update-product-unit">Unit Label</label>
+            <label for="update-product-unit">Unit Label <span class="requiredStar">*</span></label>
             <input type="text" id="update-product-unit" placeholder="plate / cup / box...">
         </div>
         </div>
@@ -333,7 +321,7 @@
         </div>
         </div>
 
-        <label for="update-product-description">Description</label>
+        <label for="update-product-description">Description <span class="requiredStar">*</span></label>
         <textarea id="update-product-description" rows="4" placeholder="Write product description..."></textarea>
         <button onclick="confirmUpdateProduct(event)" class="create-btn updateBtn" type="button">Update</button>
     </div>

@@ -238,8 +238,9 @@ function upsertLocalProduct(p) {
     const id = String(p.id);
     const idx = productsAll.findIndex(x => String(x.id) === id);
     if (idx >= 0) productsAll[idx] = { ...productsAll[idx], ...p };
-    else productsAll.unshift(p); // add new to top
-    productsById.set(id, productsAll[idx >= 0 ? idx : 0]);
+    else productsAll.push(p);
+    productsAll.sort((a, b) => Number(a.id) - Number(b.id));
+    productsById = new Map(productsAll.map(x => [String(x.id), x]));
 }
 
 function patchLocalProduct(id, patch) {
@@ -459,14 +460,19 @@ window.confirmCreateProduct = function (e) {
     const name = document.getElementById("product-name").value.trim();
     const categoryId = document.getElementById("product-category").value;
     const price = Number(document.getElementById("product-price").value);
-
+    const unitLabel = document.getElementById("product-unit").value.trim();
+    const description = document.getElementById("product-description").value.trim();
+    
     const discOn = document.getElementById("discount-active").checked;
     const discPct = Number(document.getElementById("discount-percent").value);
+    
 
     if (!img) return showCreateError("Product image is required.");
     if (!name) return showCreateError("Name is required.");
     if (!categoryId) return showCreateError("Category is required.");
     if (!Number.isFinite(price) || price < 0) return showCreateError("Invalid price.");
+    if (!unitLabel) return showCreateError("Unit label is required.");
+    if (!description) return showCreateError("Description is required.");
     if (discOn && (!Number.isFinite(discPct) || discPct <= 0 || discPct > 100)) {
         return showCreateError("Discount % must be 1 - 100.");
     }
@@ -496,12 +502,13 @@ async function createProduct() {
 
     try {
         const json = await apiFetch("/api/products", { method: "POST", body: fd });
-        if (json?.data) upsertLocalProduct(json.data);
+        // if (json?.data) upsertLocalProduct(json.data);
         closeConfirm();
         closeModal();
         
-        // await loadProducts();
-        currentPage = 1;
+        await loadProducts();
+        const total = getFiltered().length;
+        currentPage = Math.max(1, Math.ceil(total / pageSize));
         render();
         showToast("Product created");
         return true;
@@ -660,6 +667,8 @@ window.confirmUpdateProduct = function (e) {
     const name = document.getElementById("update-product-name").value.trim();
     const categoryId = document.getElementById("update-product-category").value;
     const price = Number(document.getElementById("update-product-price").value);
+    const unitLabel = document.getElementById("update-product-unit").value.trim();
+    const description = document.getElementById("update-product-description").value.trim();
 
     const discOn = document.getElementById("update-discount-active").checked;
     const discPctRaw = document.getElementById("update-discount-percent").value.trim();
@@ -669,6 +678,8 @@ window.confirmUpdateProduct = function (e) {
     if (!name) return showUpdateError("Name is required.");
     if (!categoryId) return showUpdateError("Category is required.");
     if (!Number.isFinite(price) || price < 0) return showUpdateError("Invalid price.");
+    if (!unitLabel) return showUpdateError("Unit label is required.");
+    if (!description) return showUpdateError("Description is required.");
     if (discOn && (!Number.isFinite(discPct) || discPct <= 0 || discPct > 100)) {
         return showUpdateError("Discount % must be 1 - 100.");
     }
