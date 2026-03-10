@@ -86,6 +86,16 @@ function formatDateTime(v) {
     return `${datePart} • ${timePart}`;
 }
 
+function scrollModalToTop(overlayEl) {
+    const modal = overlayEl?.querySelector(".modal");
+    if (modal) {
+        modal.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
+    }
+}
+
 function viewerRole() {
   return String(window.__ADMIN__?.role || "").toLowerCase();
 }
@@ -382,10 +392,11 @@ function render() {
 // ---------- Create Modal ----------
 const createOverlay = document.getElementById("createModal");
 function showCreateError(msg) {
-  const box = document.getElementById("createError");
-  if (!box) return;
-  box.textContent = msg;
-  box.style.display = "block";
+    const box = document.getElementById("createError");
+    if (!box) return;
+    box.textContent = msg;
+    box.style.display = "block";
+    scrollModalToTop(createOverlay);
 }
 function clearCreateError() {
   const box = document.getElementById("createError");
@@ -599,6 +610,7 @@ function showUpdateError(msg) {
     if (!box) return;
     box.textContent = msg;
     box.style.display = "block";
+    scrollModalToTop(updateOverlay);
 }
 function clearUpdateError() {
     const box = document.getElementById("updateError");
