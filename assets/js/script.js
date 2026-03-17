@@ -145,7 +145,7 @@ function requireRole(admin, roles = []) {
     if (!ok) {
         blockNoPermission({
             title: "No permission",
-            message: "You don’t have permission to access this page."
+            message: "You don't have permission to access this page."
         });
         return false;
     }
@@ -154,9 +154,9 @@ function requireRole(admin, roles = []) {
 
 function applyRoleUI(role) {
     const roleTabs = {
-        superadmin: ["dashboard", "orders", "products", "categories", "promotions", "delivery", "customers", "payments", "admins"],
-        manager:    ["dashboard", "orders", "products", "categories", "promotions", "delivery", "customers", "payments", "admins"], // admins view-only later
-        operator:   ["dashboard", "orders", "products", "delivery", "customers"],
+        superadmin: ["dashboard", "orders", "products", "reviews", "categories", "promotions", "delivery", "customers", "payments", "admins"],
+        manager:    ["dashboard", "orders", "products", "reviews", "categories", "promotions", "delivery", "customers", "payments", "admins"], // admins view-only later
+        operator:   ["dashboard", "orders", "products", "customers"],
     };
 
     const allowed = new Set(roleTabs[role] || roleTabs.operator);
@@ -165,6 +165,7 @@ function applyRoleUI(role) {
         dashboard: document.getElementById("liDashboard"),
         orders: document.getElementById("liOrders"),
         products: document.getElementById("liProducts"),
+        reviews: document.getElementById("liReviews"),
         categories: document.getElementById("liCategories"),
         promotions: document.getElementById("liPromotions"),
         delivery: document.getElementById("liDelivery"),
@@ -292,6 +293,10 @@ function setupTheme() {
         document.documentElement.dataset.theme = next;
         localStorage.setItem("theme", next);
         updateThemeButton(next);
+
+        if (typeof window.refreshDashboardCharts === "function") {
+            window.refreshDashboardCharts();
+        }
     });
 
     function updateThemeButton(theme) {

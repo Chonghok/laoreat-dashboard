@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LaorEat Admin Dashboard</title>
+    <link rel="icon" href="assets/images/favicon.ico">
+    <script>
+        (function () {
+            const saved = localStorage.getItem("theme") || "light";
+            document.documentElement.dataset.theme = saved;
+        })();
+    </script>
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.9.0/fonts/remixicon.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/payments.css">
+</head>
+<body>
+    <div id="startupLoading" class="startup-loading hidden">
+        <div class="startup-card">
+            <div class="startup-spinner"></div>
+            <h3>Connecting to server...</h3>
+            <p>Please wait while the dashboard loads.</p>
+            <small>Free hosting may take 20-30 seconds to wake up.</small>
+        </div>
+    </div>
+
+    <div class="sidebar">
+        <h1 class="menu-logo">LaorEat</h1>
+        <ul>
+            <li id="liDashboard"><a id="navDashboard" href="index.html"><i class="bi bi-grid-fill"></i>Dashboard</a></li>
+            <li id="liOrders"><a id="navOrders" href="orders.html"><i class="ri-file-list-fill"></i>Orders</a></li>
+            <li id="liProducts"><a id="navProducts" href="products.html"><i class="bi bi-fork-knife"></i>Products</a></li>
+            <li id="liReviews"><a id="navReviews" href="reviews.html"><i class="ri-message-3-line"></i>Reviews</a></li>
+            <li id="liCategories"><a id="navCategories" href="categories.html"><i class="ri-menu-search-line"></i>Categories</a></li>
+            <li id="liPromotions"><a id="navPromotions" href="promotions.html"><i class="ri-coupon-2-fill"></i>Promotions</a></li>
+            <li id="liDelivery"><a id="navDelivery" href="delivery.html"><i class="ri-takeaway-fill"></i>Delivery</a></li>
+            <li id="liCustomers"><a id="navCustomers" href="customers.html"><i class="ri-user-fill"></i>Customers</a></li>
+            <li id="liPayments"><a id="navPayments" class="active" href="payments.html"><i class="ri-bank-card-fill"></i>Payments</a></li>
+            <li id="liAdmins"><a id="navAdmins" href="admins.html"><i class="ri-shield-user-fill"></i>Admins</a></li>
+        </ul>
+
+        <div class="admin-profile-container" id="profileMenu">
+            <div class="profile-left">
+                <div class="profile-image">
+                    <img id="sidebarProfileImage" src="assets/images/default-user.webp" alt="">
+                </div>
+                <div class="profile-details">
+                    <h4 id="sidebarUsername">Admin</h4>
+                    <p id="sidebarRole">Role</p>
+                </div>
+            </div>
+            <div class="dropdown-arrow" id="profileToggle">
+                <i class="ri-arrow-down-s-line"></i>
+            </div>
+
+            <div class="profile-dropdown" id="profileDropdown">
+                <div class="dropdown-item" id="toggleTheme">
+                    <i class="ri-moon-line"></i> Dark Mode
+                </div>
+                <div class="dropdown-divider"></div>
+                <div class="dropdown-item logout-item" id="logoutBtn">
+                    <i class="ri-logout-circle-r-line"></i> Logout
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <main class="main-content">
+        <div class="title-container">
+            <h2>Payments</h2>
+        </div>
+
+        <div class="search-container">
+            <div class="search-bar">
+                <i class="ri-search-line"></i>
+                <input id="paymentSearch" type="text" placeholder="Search by payment ID, order number or customer">
+            </div>
+
+            <div class="filter-wrapper">
+                <div class="filter-bar">
+                    <select id="paymentStatusFilter">
+                        <option value="all">All Status</option>
+                        <option value="pending">Pending</option>
+                        <option value="paid">Paid</option>
+                    </select>
+                </div>
+
+                <div class="filter-bar">
+                    <select id="paymentMethodFilter">
+                        <option value="all">All Methods</option>
+                        <option value="cash">Cash</option>
+                        <option value="card">Card</option>
+                    </select>
+                </div>
+
+                <div class="filter-bar date-filter">
+                    <label for="paymentDateFrom">From</label>
+                    <input type="date" id="paymentDateFrom">
+                </div>
+
+                <div class="filter-bar date-filter">
+                    <label for="paymentDateTo">To</label>
+                    <input type="date" id="paymentDateTo">
+                </div>
+            </div>
+        </div>
+
+        <div class="stats-row">
+            <div class="stat-card">
+                <div class="stat-label">Paid</div>
+                <div class="stat-value" id="statPaidCount">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Pending</div>
+                <div class="stat-value" id="statPendingCount">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Card Payments</div>
+                <div class="stat-value" id="statCardCount">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Cash Payments</div>
+                <div class="stat-value" id="statCashCount">0</div>
+            </div>
+        </div>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 80px;">ID</th>
+                        <th style="width: 150px;">Order</th>
+                        <th>Customer</th>
+                        <th style="width: 140px;">Method</th>
+                        <th style="width: 120px;">Amount</th>
+                        <th style="width: 130px;">Status</th>
+                        <th style="width: 170px;">Paid / Created</th>
+                        <th style="width: 100px;">Action</th>
+                    </tr>
+                </thead>
+                <tbody id="payments-table-body"></tbody>
+            </table>
+        </div>
+
+        <div id="paymentsPagination" class="pagination"></div>
+    </main>
+
+    <!-- View Payment Modal -->
+    <div class="modal-overlay" id="viewModal">
+        <div class="modal payment-view-modal">
+            <div class="popup-top">
+                <h2>Payment Details</h2>
+                <button type="button" class="closeModal-btn" onclick="closeViewModal()">
+                    <i class="ri-close-line"></i>
+                </button>
+            </div>
+
+            <div class="pay-header">
+                <div class="pay-header-left">
+                    <div class="pay-id-wrap">
+                        <div class="pay-title">Payment #<span id="view-payment-id">-</span></div>
+                        <div class="pay-subtitle">
+                            Order <span id="view-order-number">-</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pay-header-right">
+                    <span class="status-badge" id="view-status-badge">-</span>
+                </div>
+            </div>
+
+            <div class="card-display" id="cardDisplay">
+                <div class="card-brand-block">
+                    <div class="card-brand-icon" id="cardBrandIcon">
+                        <i class="ri-bank-card-line"></i>
+                    </div>
+                    <div class="card-brand-texts">
+                        <div class="card-brand-name" id="view-card-brand">Card</div>
+                        <div class="card-provider-name" id="view-provider">-</div>
+                    </div>
+                </div>
+
+                <div class="card-number-preview" id="view-card-number">•••• •••• •••• ••••</div>
+            </div>
+
+            <div class="psection">
+                <div class="psection-title">Payment Info</div>
+                <div class="pgrid">
+                    <div class="pitem">
+                        <div class="plabel">Method</div>
+                        <div class="pvalue" id="view-method">-</div>
+                    </div>
+                    <div class="pitem">
+                        <div class="plabel">Amount</div>
+                        <div class="pvalue" id="view-amount">-</div>
+                    </div>
+                    <div class="pitem">
+                        <div class="plabel">Currency</div>
+                        <div class="pvalue" id="view-currency">-</div>
+                    </div>
+                    <div class="pitem">
+                        <div class="plabel">Provider</div>
+                        <div class="pvalue" id="view-provider-text">-</div>
+                    </div>
+                    <div class="pitem">
+                        <div class="plabel">Paid At</div>
+                        <div class="pvalue" id="view-paid-at">-</div>
+                    </div>
+                    <div class="pitem">
+                        <div class="plabel">Created At</div>
+                        <div class="pvalue" id="view-created-at">-</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="psection">
+                <div class="psection-title">Order & Customer</div>
+                <div class="pgrid">
+                    <div class="pitem">
+                        <div class="plabel">Order Number</div>
+                        <div class="pvalue" id="view-order-number-box">-</div>
+                    </div>
+                    <div class="pitem">
+                        <div class="plabel">Order Status</div>
+                        <div class="pvalue" id="view-order-status">-</div>
+                    </div>
+                    <div class="pitem">
+                        <div class="plabel">Customer</div>
+                        <div class="pvalue" id="view-customer-name">-</div>
+                    </div>
+                    <div class="pitem">
+                        <div class="plabel">Phone</div>
+                        <div class="pvalue" id="view-customer-phone">-</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="psection" id="stripeSection">
+                <div class="psection-title">Gateway</div>
+                <div class="pitem full">
+                    <div class="plabel">Stripe Payment Intent ID</div>
+                    <div class="pvalue break" id="view-stripe-intent">-</div>
+                </div>
+            </div>
+
+            <div class="view-footer">
+                <button type="button" class="create-btn view-close" onclick="closeViewModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="toast">Hello</div>
+
+    <script src="assets/js/config.js"></script>
+    <script src="assets/js/script.js" defer></script>
+    <script src="assets/js/payments.js" defer></script>
+</body>
+</html>

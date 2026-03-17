@@ -148,6 +148,7 @@ html[data-theme="dark"] .startup-spinner{
     height: 100vh;
     background: var(--sidebar-bg);
     /* padding: 20px 0; */
+    z-index: 1000;
 }
 
 .sidebar ul {
@@ -237,6 +238,7 @@ html[data-theme="dark"] .startup-spinner{
     left: 20px;
     width: 200px;
     cursor: pointer;
+    z-index: 1001;
 }
 
 .profile-left {
@@ -264,7 +266,7 @@ html[data-theme="dark"] .startup-spinner{
     border-radius: 12px;
     box-shadow: var(--shadow);
     overflow: hidden;
-    z-index: 9999;               
+    z-index: 1002;               
 }
 
 .profile-dropdown.active {
@@ -314,6 +316,7 @@ html[data-theme="dark"] .startup-spinner{
     overflow-y: auto; /* ONLY this scrolls */
     padding: 25px;
     background: var(--bg);
+    z-index: 1;
 }
 
 

@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LaorEat Admin Dashboard</title>
+    <link rel="icon" href="assets/images/favicon.ico">
+
+    <script>
+        (function () {
+            const saved = localStorage.getItem("theme") || "light";
+            document.documentElement.dataset.theme = saved;
+        })();
+    </script>
+
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.9.0/fonts/remixicon.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/orders.css">
+</head>
+<body>
+    <div id="startupLoading" class="startup-loading hidden">
+        <div class="startup-card">
+            <div class="startup-spinner"></div>
+            <h3>Connecting to server...</h3>
+            <p>Please wait while the dashboard loads.</p>
+            <small>Free hosting may take 20-30 seconds to wake up.</small>
+        </div>
+    </div>
+
+    <div class="sidebar">
+        <h1 class="menu-logo">LaorEat</h1>
+        <ul>
+            <li id="liDashboard"><a id="navDashboard" href="index.html"><i class="bi bi-grid-fill"></i>Dashboard</a></li>
+            <li id="liOrders"><a id="navOrders" class="active" href="orders.html"><i class="ri-file-list-fill"></i>Orders</a></li>
+            <li id="liProducts"><a id="navProducts" href="products.html"><i class="bi bi-fork-knife"></i>Products</a></li>
+            <li id="liReviews"><a id="navReviews" href="reviews.html"><i class="ri-message-3-line"></i>Reviews</a></li>
+            <li id="liCategories"><a id="navCategories" href="categories.html"><i class="ri-menu-search-line"></i>Categories</a></li>
+            <li id="liPromotions"><a id="navPromotions" href="promotions.html"><i class="ri-coupon-2-fill"></i>Promotions</a></li>
+            <li id="liDelivery"><a id="navDelivery" href="delivery.html"><i class="ri-takeaway-fill"></i>Delivery</a></li>
+            <li id="liCustomers"><a id="navCustomers" href="customers.html"><i class="ri-user-fill"></i>Customers</a></li>
+            <li id="liPayments"><a id="navPayments" href="payments.html"><i class="ri-bank-card-fill"></i>Payments</a></li>
+            <li id="liAdmins"><a id="navAdmins" href="admins.html"><i class="ri-shield-user-fill"></i>Admins</a></li>
+        </ul>
+
+        <div class="admin-profile-container" id="profileMenu">
+            <div class="profile-left">
+                <div class="profile-image">
+                    <img id="sidebarProfileImage" src="assets/images/default-user.webp" alt="">
+                </div>
+                <div class="profile-details">
+                    <h4 id="sidebarUsername">Admin</h4>
+                    <p id="sidebarRole">Role</p>
+                </div>
+            </div>
+            <div class="dropdown-arrow" id="profileToggle">
+                <i class="ri-arrow-down-s-line"></i>
+            </div>
+
+            <div class="profile-dropdown" id="profileDropdown">
+                <div class="dropdown-item" id="toggleTheme">
+                    <i class="ri-moon-line"></i> Dark Mode
+                </div>
+                <div class="dropdown-divider"></div>
+                <div class="dropdown-item logout-item" id="logoutBtn">
+                    <i class="ri-logout-circle-r-line"></i> Logout
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <main class="main-content">
+        <div class="title-container">
+            <h2>Orders</h2>
+        </div>
+
+        <div class="search-container">
+            <div class="search-bar">
+                <i class="ri-search-line"></i>
+                <input id="orderSearch" type="text" placeholder="Search by order number, customer, phone">
+            </div>
+
+            <div class="filter-wrapper">
+                <div class="filter-bar">
+                    <select id="statusFilter">
+                        <option value="all">All Statuses</option>
+                        <option value="accepted">Accepted</option>
+                        <option value="preparing">Preparing</option>
+                        <option value="on_the_way">On The Way</option>
+                        <option value="delivered">Delivered</option>
+                        <option value="ready_for_pickup">Ready For Pickup</option>
+                        <option value="picked_up">Picked Up</option>
+                    </select>
+                </div>
+
+                <div class="filter-bar">
+                    <select id="deliveryTypeFilter">
+                        <option value="all">All Types</option>
+                        <option value="DELIVERY">Delivery</option>
+                        <option value="PICKUP">Pickup</option>
+                        <option value="SCHEDULED">Scheduled</option>
+                    </select>
+                </div>
+
+                <div class="filter-bar">
+                    <select id="paymentFilter">
+                        <option value="all">All Payments</option>
+                        <option value="cash">Cash</option>
+                        <option value="card">Card</option>
+                    </select>
+                </div>
+                
+                <div class="filter-bar date-filter">
+                    <label for="orderDateFrom">From</label>
+                    <input type="date" id="orderDateFrom">
+                </div>
+
+                <div class="filter-bar date-filter">
+                    <label for="orderDateTo">To</label>
+                    <input type="date" id="orderDateTo">
+                </div>
+            </div>
+        </div>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 190px;">Order No.</th>
+                        <th>Customer</th>
+                        <th style="width: 170px;">Type</th>
+                        <th style="width: 120px;">Total</th>
+                        <th style="width: 130px;">Payment</th>
+                        <th style="width: 160px;">Status</th>
+                        <th style="width: 150px;">Created</th>
+                        <th style="width: 130px;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="ordersTableBody"></tbody>
+            </table>
+        </div>
+
+        <div id="ordersPagination" class="pagination"></div>
+    </main>
+
+    <!-- View Modal -->
+    <div class="modal-overlay" id="viewOrderModal">
+        <div class="modal order-view-modal">
+            <div class="popup-top">
+                <h2>Order Details</h2>
+                <button type="button" class="closeModal-btn" onclick="closeViewOrderModal()">
+                    <i class="ri-close-line"></i>
+                </button>
+            </div>
+
+            <div class="ov-header">
+                <div>
+                    <div class="ov-order-no" id="viewOrderNumber">-</div>
+                    <div class="ov-order-meta">
+                        <span>Created: <strong id="viewCreatedAt">-</strong></span>
+                        <span>Updated: <strong id="viewUpdatedAt">-</strong></span>
+                    </div>
+                </div>
+
+                <div class="ov-badges">
+                    <span class="obadge type" id="viewDeliveryType">-</span>
+                    <span class="obadge payment" id="viewPaymentMethod">-</span>
+                    <span class="obadge status" id="viewStatusBadge">-</span>
+                </div>
+            </div>
+
+            <div class="detail-grid">
+                <div class="detail-card">
+                    <div class="detail-title">Customer</div>
+                    <div class="detail-row"><span>Name</span><strong id="viewContactName">-</strong></div>
+                    <div class="detail-row"><span>Phone</span><strong id="viewContactPhone">-</strong></div>
+                    <div class="detail-row"><span>Email</span><strong id="viewCustomerEmail">-</strong></div>
+                </div>
+
+                <div class="detail-card">
+                    <div class="detail-title">Delivery Info</div>
+                    <div class="detail-row"><span>Type</span><strong id="viewDeliveryName">-</strong></div>
+                    <div class="detail-row"><span>Scheduled</span><strong id="viewScheduledFor">-</strong></div>
+                    <div class="detail-row detail-column">
+                        <span>Address</span>
+                        <strong id="viewAddress">-</strong>
+                    </div>
+                    <div class="detail-row detail-column">
+                        <span>Note for rider</span>
+                        <strong id="viewNoteForRider">-</strong>
+                    </div>
+                </div>
+
+                <div class="detail-card">
+                    <div class="detail-title">Payment</div>
+                    <div class="detail-row"><span>Method</span><strong id="viewPaymentMethodText">-</strong></div>
+                    <div class="detail-row"><span>Provider</span><strong id="viewPaymentProvider">-</strong></div>
+                    <div class="detail-row"><span>Status</span><strong id="viewPaymentStatus">-</strong></div>
+                    <div class="detail-row"><span>Paid At</span><strong id="viewPaidAt">-</strong></div>
+                </div>
+
+                <div class="detail-card">
+                    <div class="detail-title">Totals</div>
+                    <div class="detail-row"><span>Subtotal</span><strong id="viewSubtotal">-</strong></div>
+                    <div class="detail-row"><span>Discount</span><strong id="viewDiscount">-</strong></div>
+                    <div class="detail-row"><span>Delivery Fee</span><strong id="viewDeliveryFee">-</strong></div>
+                    <div class="detail-row total-row"><span>Total</span><strong id="viewTotalAmount">-</strong></div>
+                </div>
+            </div>
+
+            <div class="items-section">
+                <div class="detail-title">Order Items</div>
+                <div class="items-table-wrap">
+                    <table class="items-table">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th style="width: 90px;">Qty</th>
+                                <th style="width: 110px;">Unit</th>
+                                <th style="width: 100px;">Discount</th>
+                                <th style="width: 110px;">Final</th>
+                                <th style="width: 110px;">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody id="viewItemsBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="view-footer">
+                <button type="button" class="create-btn view-close" onclick="closeViewOrderModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Update Status Modal -->
+    <div class="modal-overlay" id="updateStatusModal">
+        <div class="modal status-modal">
+            <div class="popup-top">
+                <h2>Update Order Status</h2>
+                <button type="button" class="closeModal-btn" onclick="closeUpdateStatusModal()">
+                    <i class="ri-close-line"></i>
+                </button>
+            </div>
+
+            <div class="form-error" id="updateStatusError"></div>
+
+            <input type="hidden" id="updateOrderId">
+            <input type="hidden" id="updateOrderTypeCode">
+            <input type="hidden" id="updateCurrentStatus">
+
+            <div class="status-preview-box">
+                <div class="detail-row"><span>Order</span><strong id="updateOrderNumber">-</strong></div>
+                <div class="detail-row"><span>Type</span><strong id="updateDeliveryTypeName">-</strong></div>
+                <div class="detail-row"><span>Current Status</span><strong id="updateCurrentStatusText">-</strong></div>
+            </div>
+
+            <label for="updateOrderStatus">New Status <span class="requiredStar">*</span></label>
+            <select id="updateOrderStatus"></select>
+
+            <button onclick="confirmUpdateOrderStatus(event)" class="create-btn updateBtn" type="button">Update</button>
+        </div>
+    </div>
+
+    <!-- Confirm -->
+    <div class="confirm-overlay" id="confirmModal">
+        <div class="confirm-modal">
+            <h3 id="confirmTitle"></h3>
+            <p id="confirmMessage"></p>
+            <div class="confirm-actions">
+                <button class="cancel-btn" id="cancelConfirm" type="button" onclick="closeConfirm()">Cancel</button>
+                <button class="confirm-btn" id="confirmBtn" type="button">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="toast">Hello</div>
+
+    <script src="assets/js/config.js"></script>
+    <script src="assets/js/script.js" defer></script>
+    <script src="assets/js/orders.js" defer></script>
+</body>
+</html>

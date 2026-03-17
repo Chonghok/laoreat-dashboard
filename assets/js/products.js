@@ -1,7 +1,3 @@
-/* ============================
-   PRODUCTS.JS (Fresh - works with Laravel controllers above)
-============================ */
-
 let productsAll = [];
 let productsById = new Map();
 

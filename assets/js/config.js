@@ -7,4 +7,7 @@
     const PROD_API  = "https://laoreat-api.onrender.com";
 
     window.API_BASE = isLocal ? LOCAL_API : PROD_API;
+
+    // Uncomment when testing Render API on localhost
+    window.API_BASE = PROD_API;
 })();
