@@ -56,6 +56,45 @@ function formatDateTime(v) {
     return `${datePart} • ${timePart}`;
 }
 
+function getReviewDateText(review) {
+    const created = review?.created_at || null;
+    const updated = review?.updated_at || null;
+
+    if (!created) return "-";
+
+    const createdRaw = String(created).replace(" ", "T");
+    const updatedRaw = String(updated || "").replace(" ", "T");
+
+    const createdDate = new Date(createdRaw);
+    const updatedDate = new Date(updatedRaw);
+
+    if (
+        updated &&
+        !Number.isNaN(createdDate.getTime()) &&
+        !Number.isNaN(updatedDate.getTime()) &&
+        updatedDate.getTime() !== createdDate.getTime()
+    ) {
+        return `Edited • ${formatDateTime(updated)}`;
+    }
+
+    return formatDateTime(created);
+}
+
+function renderStars(rating) {
+    const value = Math.max(0, Math.min(5, Number(rating || 0)));
+    const full = Math.round(value);
+    let html = '<div class="review-stars" aria-label="' + full + ' out of 5 stars">';
+
+    for (let i = 1; i <= 5; i++) {
+        html += `<i class="ri-star-${i <= full ? "fill" : "line"} ${i <= full ? "filled" : "empty"}"></i>`;
+    }
+
+    html += `<span class="review-stars-text">${full} ${full === 1 ? "star" : "stars"}</span>`;
+    html += '</div>';
+
+    return html;
+}
+
 async function apiFetch(path, opts = {}) {
     const token = (typeof getToken === "function") ? getToken() : null;
 
@@ -285,14 +324,14 @@ async function openReviewsModal(productId) {
                     </div>
 
                     <div class="review-right">
-                        <span class="star-badge"><i class="ri-star-fill"></i> ${Number(r.rating || 0)}</span>
+                        ${renderStars(r.rating)}
                         <span class="visibility-badge ${isOn(r.is_visible) ? "visible" : "hidden"}">
                             ${isOn(r.is_visible) ? "Visible" : "Hidden"}
                         </span>
                     </div>
                 </div>
 
-                <div class="review-date">${formatDateTime(r.created_at)}</div>
+                <div class="review-date">${getReviewDateText(r)}</div>
                 <div class="review-comment">${(r.comment || "").trim() ? r.comment : "No comment provided."}</div>
 
                 <div class="review-actions">

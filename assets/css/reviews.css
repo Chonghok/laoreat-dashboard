@@ -412,6 +412,37 @@ html[data-theme="dark"] .modal::-webkit-scrollbar-thumb{
     color: #d89b00;
 }
 
+.review-stars{
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    flex-wrap: wrap;
+}
+
+.review-stars i{
+    font-size: 15px;
+    line-height: 1;
+}
+
+.review-stars i.filled{
+    color: #ffc020;
+}
+
+.review-stars i.empty{
+    color: #b8b8b8;
+}
+
+.review-stars-text{
+    margin-left: 6px;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--muted);
+}
+
+html[data-theme="dark"] .review-stars i.empty{
+    color: #6f6f6f;
+}
+
 .visibility-badge{
     display: inline-flex;
     align-items: center;
