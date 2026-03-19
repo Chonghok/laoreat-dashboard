@@ -488,13 +488,19 @@ function wireFilters() {
 
 document.addEventListener("DOMContentLoaded", async () => {
     try {
+        let waited = 0;
+
+        while (!window.__AUTH_READY__ && waited < 5000) {
+            await new Promise(resolve => setTimeout(resolve, 100));
+            waited += 100;
+        }
+
         if (window.__AUTH_READY__) {
             await window.__AUTH_READY__;
         }
 
         const admin = window.__ADMIN__;
         if (!admin) return;
-
         if (!requireRole(admin, ["superadmin", "manager"])) return;
 
         await loadReviewProducts();

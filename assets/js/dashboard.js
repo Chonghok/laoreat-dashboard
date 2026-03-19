@@ -7,26 +7,18 @@ let deliveryTypeChart = null;
 let trendChart = null;
 
 document.addEventListener("DOMContentLoaded", async () => {
-    await window.__AUTH_READY__;
-    if (!window.__ADMIN__) return;
-
-    loadDashboard();
-
-    const refreshBtn = document.getElementById("refreshDashboardBtn");
-    if (refreshBtn) {
-        refreshBtn.addEventListener("click", loadDashboard);
+    try {
+        await waitForAuthReady();
+        if (!getToken()) return;
+        await loadDashboard();
+    } catch (error) {
+        renderDashboardError(error.message || "Failed to initialize dashboard.");
     }
 });
 
 async function loadDashboard() {
     const token = getToken();
     if (!token) return;
-
-    const refreshBtn = document.getElementById("refreshDashboardBtn");
-    if (refreshBtn) {
-        refreshBtn.disabled = true;
-        refreshBtn.innerHTML = `<i class="ri-loader-4-line"></i> Refreshing...`;
-    }
 
     try {
         const res = await fetch(DASHBOARD_ENDPOINT, {
@@ -52,12 +44,62 @@ async function loadDashboard() {
         renderRecentOrders(json.recent_orders || []);
     } catch (error) {
         renderDashboardError(error.message || "Something went wrong.");
-    } finally {
-        if (refreshBtn) {
-            refreshBtn.disabled = false;
-            refreshBtn.innerHTML = `<i class="ri-refresh-line"></i> Refresh`;
+    } 
+}
+
+async function waitForAuthReady(maxWaitMs = 20000) {
+    const start = Date.now();
+
+    while (Date.now() - start < maxWaitMs) {
+        if (window.__AUTH_READY__) {
+            try {
+                await window.__AUTH_READY__;
+            } catch (_) {}
+            break;
+        }
+        await delay(150);
+    }
+
+    let waited = 0;
+    while (!window.__ADMIN__ && getToken() && waited < 5000) {
+        await delay(150);
+        waited += 150;
+    }
+}
+
+async function fetchDashboardWithRetry(token, maxAttempts = 4, waitMs = 3500) {
+    let lastError = null;
+
+    for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+        try {
+            const res = await fetch(DASHBOARD_ENDPOINT, {
+                headers: {
+                    "Accept": "application/json",
+                    "Authorization": `Bearer ${token}`
+                }
+            });
+
+            if (res.ok) return res;
+
+            if ([502, 503, 504].includes(res.status)) {
+                lastError = new Error("Server is waking up. Please wait...");
+            } else {
+                return res;
+            }
+        } catch (error) {
+            lastError = error;
+        }
+
+        if (attempt < maxAttempts) {
+            await delay(waitMs);
         }
     }
+
+    throw lastError || new Error("Failed to load dashboard.");
+}
+
+function delay(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 function renderSummaryCards(summary) {
